@@ -1,97 +1,68 @@
-# Contributor Guide for n8n Codex Node
+# Contributor Guide for n8n Community Node
 
-## Dev Environment Tips
+## Getting started
 
-* **Clone & install**:
+1. Clone the repository and install dependencies:
 
-  ```bash
-  git clone https://github.com/hiasinho/n8n-nodes-codex.git
-  cd n8n-nodes-codex
-  npm install
-  ```
-* **Workspace structure**:
+```bash
+git clone https://github.com/hiasinho/n8n-nodes-codex.git
+cd n8n-nodes-codex
+npm install
+```
 
-  * Root `tsconfig.json` and `package.json` define workspaces.
-  * Node package at `nodes/OpenAICodex/` has its own `package.json` and `tsconfig.json`.
+Requires Node.js 20 or later.
 
-* **Add dependencies**:
+## Repository structure
 
-  ```bash
-  npm install <pkg>          # at repo root
-  cd nodes/OpenAICodex
-  npm install <pkg>          # in node package
-  ```
+- Node source files are in `nodes/`.
+- Credential definitions are in `credentials/`.
+- Compiled files are output to `dist/` by the build script.
 
-* **Lint & type-check**:
+## Useful scripts
 
-  ```bash
-  npm run lint
-  npm run build:type-check
-  ```
+### Build
 
-## Testing Instructions (TDD)
+```bash
+npm run build
+```
 
-* **Test-Driven Development**: write a failing test before any implementation.
+Compiles TypeScript and copies icons.
 
-1. **Set up test framework**
+### Watch for changes
 
-   * Ensure Vitest (or Jest) is installed in node package:
+```bash
+npm run dev
+```
 
-     ```bash
-     cd nodes/OpenAICodex
-     npm install --save-dev vitest ts-node @types/node
-     ```
-   * Add test script in `nodes/OpenAICodex/package.json`:
+### Lint
 
-     ```json
-     "scripts": {
-       "test": "vitest"
-     }
-     ```
+```bash
+npm run lint
+```
 
-2. **Mock HTTP calls** (no real web access)
+Run `npm run lintfix` to fix issues automatically.
 
-   * Use `nock` or `msw` to simulate OpenAI API responses.
-   * Example in tests:
+### Format
 
-     ```ts
-     import nock from 'nock';
+```bash
+npm run format
+```
 
-     nock('https://api.openai.com')
-       .post('/v1/engines/code/completions')
-       .reply(200, { choices: [{ text: 'generated code' }] });
-     ```
+## Pre-commit checklist
 
-3. **Write tests first**
+Run the following before committing:
 
-   * Create a new test file, e.g. `nodes/OpenAICodex/__tests__/completion.spec.ts`.
-   * Describe expected behavior:
+```bash
+npm run lint
+npm run build
+```
 
-     ```ts
-     import { execute } from '../OpenAICodex.node';
+## Testing
 
-     test('should call Codex completion', async () => {
-       // setup mock
-       // call execute with parameters
-       // assert output matches mock
-     });
-     ```
+This repository does not include a test setup. If you add tests, configure a framework such as Vitest or Jest and mock HTTP calls.
 
-4. **Run tests**
+## Documentation
 
-   ```bash
-   cd nodes/OpenAICodex
-   npm test -- --watch
-   ```
+Replace the starter README with documentation for your node. Use `README_TEMPLATE.md` as a starting point and follow the n8n community node guidelines:
 
-5. **Implement minimal code**
-
-   * Modify `OpenAICodex.node.ts` to satisfy tests.
-   * Repeat until test passes; then refactor.
-
-6. **Final checks**
-
-   ```bash
-   npm run lint
-   npm run build:type-check
-   ```
+<https://docs.n8n.io/integrations/creating-nodes/overview/>
